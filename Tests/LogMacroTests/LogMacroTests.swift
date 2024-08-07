@@ -21,7 +21,7 @@ final class LogMacroTests: XCTestCase {
         """
         #logDebug("message")
         """,
-        expandedSource: 
+        expandedSource:
         """
         ({
           let level = LogLevel.debug
@@ -33,7 +33,7 @@ final class LogMacroTests: XCTestCase {
           Log.default
             .debug("\\(LogMessage.make(newMessage, file: #file, function: #function, line: #line))")
 
-          LogProcess.shared.executePostAction(message: "message", level: level, file: #file, function: #function, line: #line)
+          LogProcess.shared.executePostAction(rawMessages: ["message"], postedMessage: newMessage, level: level, file: #file, function: #function, line: #line)
             })()
         """,
         macros: testMacros
@@ -43,11 +43,12 @@ final class LogMacroTests: XCTestCase {
     #endif
   }
 
+
   func testLogWarn() throws {
     #if canImport(LogMacroImplementation)
       assertMacroExpansion(
         """
-        #logWarn("message", category: .tracking)
+        #logWarn("message", 1, category: .tracking)
         """,
         expandedSource:
         """
@@ -57,11 +58,11 @@ final class LogMacroTests: XCTestCase {
             return
           }
 
-          let newMessage = LogProcess.shared.replaceMessage(from: "\\("message")", level: level)
+          let newMessage = LogProcess.shared.replaceMessage(from: "\\("message") \\(1)", level: level)
           Log.tracking
             .warning("\\(LogMessage.make(newMessage, file: #file, function: #function, line: #line))")
 
-          LogProcess.shared.executePostAction(message: "message", level: level, file: #file, function: #function, line: #line)
+          LogProcess.shared.executePostAction(rawMessages: ["message", 1], postedMessage: newMessage, level: level, file: #file, function: #function, line: #line)
             })()
         """,
         macros: testMacros
@@ -92,7 +93,7 @@ final class LogMacroTests: XCTestCase {
           Log.network
             .fault("\\(LogMessage.make(newMessage, file: #file, function: #function, line: #line))")
 
-          LogProcess.shared.executePostAction(message: MyError.unknown, level: level, file: #file, function: #function, line: #line)
+          LogProcess.shared.executePostAction(rawMessages: [MyError.unknown], postedMessage: newMessage, level: level, file: #file, function: #function, line: #line)
             })()
         """,
         macros: testMacros

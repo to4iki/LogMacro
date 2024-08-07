@@ -7,11 +7,11 @@ struct PasswordLogReplacingPlugin: LogReplacingPlugin {
 }
 
 struct MyErrorLogPostActionPlugin: LogPostActionPlugin {
-  func execute(message: Any, level: LogLevel, file: String, function: String, line: Int) {
+  func execute(rawMessages: [Any], postedMessage: String, level: LogLevel, file: String, function: String, line: Int) {
     guard level >= .fault else {
       return
     }
-    guard message is MyError else {
+    guard rawMessages.contains(where: { $0 is MyError }) else {
       return
     }
     print("MyErrorLogPostActionPlugin")
@@ -23,7 +23,7 @@ enum MyError: Error {
 }
 
 func func1() {
-  #logDebug("debug")
+  #logDebug("debug1", "debug2")
 }
 
 func func2() {

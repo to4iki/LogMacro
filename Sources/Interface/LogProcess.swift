@@ -3,7 +3,7 @@ public protocol LogReplacingPlugin {
 }
 
 public protocol LogPostActionPlugin {
-  func execute(message: Any, level: LogLevel, file: String, function: String, line: Int)
+  func execute(rawMessages: [Any], postedMessage: String, level: LogLevel, file: String, function: String, line: Int)
 }
 
 public final class LogProcess {
@@ -36,12 +36,12 @@ public final class LogProcess {
     return replacingPlugin.newMessage(from: message, level: level)
   }
 
-  public func executePostAction(message: Any, level: LogLevel, file: String, function: String, line: Int) {
+  public func executePostAction(rawMessages: [Any], postedMessage: String, level: LogLevel, file: String, function: String, line: Int) {
     Task {
       await withTaskGroup(of: Void.self) { group in
         for plugin in postActionPlugins {
           group.addTask {
-            plugin.execute(message: message, level: level, file: file, function: function, line: line)
+            plugin.execute(rawMessages: rawMessages, postedMessage: postedMessage, level: level, file: file, function: function, line: line)
           }
         }
       }

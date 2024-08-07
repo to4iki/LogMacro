@@ -58,11 +58,11 @@ Register a `LogPostActionPlugin` for perform any processing after the log is pos
 ```swift
 /// Print output only when message is `MyError`.
 struct MyErrorLogPostActionPlugin: LogPostActionPlugin {
-  func execute(message: Any, level: LogLevel, file: String, function: String, line: Int) {
+  func execute(rawMessages: [Any], postedMessage: String, level: LogLevel, file: String, function: String, line: Int) {
     guard level >= .fault else {
       return
     }
-    guard message is MyError else {
+    guard rawMessages.contains(where: { $0 is MyError }) else {
       return
     }
     print("MyErrorLogPostActionPlugin")
