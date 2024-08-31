@@ -37,14 +37,8 @@ public final class LogProcess {
   }
 
   public func executePostAction(message: Any, level: LogLevel, file: String, function: String, line: Int) {
-    Task {
-      await withTaskGroup(of: Void.self) { group in
-        for plugin in postActionPlugins {
-          group.addTask {
-            plugin.execute(message: message, level: level, file: file, function: function, line: line)
-          }
-        }
-      }
+    for plugin in postActionPlugins {
+      plugin.execute(message: message, level: level, file: file, function: function, line: line)
     }
   }
 }
