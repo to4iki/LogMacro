@@ -7,11 +7,12 @@ public protocol LogPostActionPlugin {
 }
 
 public final class LogProcess {
-  public static let shared = LogProcess()
-
   private var enabledLogLevel: LogLevel = .debug
   private var replacingPlugin: LogReplacingPlugin?
   private var postActionPlugins: [LogPostActionPlugin] = []
+
+  public nonisolated(unsafe) static let shared = LogProcess()
+  private init() {}
 
   public func setEnabledLogLevel(_ level: LogLevel) {
     self.enabledLogLevel = level

@@ -1,5 +1,5 @@
 # LogMacro
-![Swift 5](https://img.shields.io/badge/swift-5-orange.svg)
+![Swift 6](https://img.shields.io/badge/swift-6-orange.svg)
 ![SPM compatible](https://img.shields.io/badge/SPM-Compatible-brightgreen.svg)
 ![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
